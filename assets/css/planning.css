@@ -1,0 +1,17 @@
+table {
+  width: 100%;
+}
+
+.pdf-header-img img {
+  width: 250px;
+}
+
+.c-flex {
+  display: flex;
+  flex-grow: 1;
+}
+.c-flex-row {
+  flex-direction: row;
+}
+
+/*# sourceMappingURL=planning.css.map */

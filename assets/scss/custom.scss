@@ -1,0 +1,163 @@
+/**
+    custom.scss es el remplazo de base.css. Se encuentra linqueado a bootstrap (carpeta vendor).
+*/
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
+
+
+// $blue: #0078c1;
+$blue: #31355C;
+$orange: #F65900;
+$primary: $orange;
+$warning: #FFD507;
+$success: #59D45C;
+$danger: #F13C46;
+$gray:#7E819F;
+$primary-light:#FFF0E8;
+$success-light:#CEFFCF;
+$warning-light:#fff4be;
+$blue-light:#F4F7FD;
+$danger-light:#F8E9EA;
+
+
+$theme-colors: (
+  "primary":      $primary,
+    "secondary":  $secondary,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
+    "dark":       $dark
+);
+
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px
+);
+
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1380px
+);
+
+
+.far, .fas, .fa {
+  color:inherit;
+}
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+/* @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap'); */
+
+
+@font-face {
+    font-family: manrope;
+    src: url(../fonts/Manrope-VariableFont_wght.ttf) format("opentype");
+}
+
+ html, body{
+	height:297mm;
+	width:210mm;
+	margin-left: auto;
+	margin-right: auto; 
+} 
+body{
+	font-family:Arial, Helvetica, sans-serif;
+	color: $blue;
+	//width: 100%;
+	//padding: 10px;
+}
+$title-base-font-size: 36px;
+$title-scale-drop: 6px;   
+@for $i from 1 to 5 {
+    h#{$i}{
+        font-size: $title-base-font-size - $title-scale-drop * ($i - 1);
+        font-style: normal;
+        font-weight: bold;
+    }
+    
+}
+h5{ 
+	font-size: 16px;
+	font-style: normal;
+	font-weight: bold;
+}
+h6{ 
+	font-size: 14px;
+	font-style: normal;
+	font-weight: bold;
+}
+h2{
+    margin-top: 0;
+}
+
+p{  
+    font-size: 15px;
+    color: $gray;
+}
+p, span, a ,i{
+	font-size: 13px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: $gray;
+}
+a{
+	color: $primary;
+}
+
+small, .c-small {
+    font-size: 11px;
+    color: $gray;
+    font-weight: 500;
+}
+.c-chip{
+	display: inline-block;
+    font-size:12px;
+    padding: 10px;
+    background:$blue-light;
+    color: $blue;
+    font-weight: 700;
+    border-radius: 5px;
+}
+
+small.c-chip {
+    font-size:11px;
+    padding: 5px;
+}
+
+.c-chip-primary{
+    color: $primary !important;
+    background: $primary-light !important;
+}
+
+.c-chip-success{
+    color: $success !important;
+	background: $success-light ;
+	*{
+		color: $success !important;
+		background: $success-light ;
+	}
+}
+.c-chip-danger{
+    color: $danger !important;
+    background: $danger-light;
+}
+/*
+@media print {
+    body{
+        width: 21cm;
+        height: 29.7cm; 
+        margin: 10mm; 
+        
+   } 
+}
+*/

@@ -1,0 +1,16 @@
+table{
+	width: 100%;
+	margin-left: -50px;
+}
+.pdf-header-img{
+	img{
+		width: 250px;
+	}
+}
+.c-flex{
+	display: flex;
+	flex-grow: 1;
+	&-row{
+		flex-direction: row;
+	}
+}
