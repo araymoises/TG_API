@@ -2,10 +2,11 @@ import dotenv from 'dotenv';
 
 const envFound = dotenv.config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-const MONGODB_URI = process.env.MONGODB_URI || "";
-if(MONGODB_URI === "") throw new Error("MONGODB_URI not declared");
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://admin:mYWxRHtFO0pultP0@cluster0.0nnu6.mongodb.net/api?retryWrites=true&w=majority";
+
+const JWT_SECRET = process.env.JWT_SECRET || "wKtYc83sFLTICSgZ";
 
 const WEBSITE_URL: string = process.env.WEBSITE_URL || "";
 if(WEBSITE_URL === "") throw new Error("WEBSITE_URL not declared");
@@ -13,11 +14,12 @@ if(WEBSITE_URL === "") throw new Error("WEBSITE_URL not declared");
 const BASE_URL: string = process.env.BASE_URL || "";
 if(BASE_URL === "") throw new Error("BASE_URL not declared");
 
-const AUTH_TOKEN_EXPIRATION: number = parseInt(process.env.AUTH_TOKEN_EXPIRATION || "86400") // 60 * 60 * 24
+const AUTH_TOKEN_EXPIRATION: string = process.env.AUTH_TOKEN_EXPIRATION || "86400" // 60 * 60 * 24
 
 export default {
     PORT: PORT,
     MONGODB_URI: MONGODB_URI,
+	JWT_SECRET,
 	WEBSITE_URL: WEBSITE_URL,
 	AUTH_TOKEN_EXPIRATION,
 	BASE_URL
