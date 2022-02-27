@@ -8,10 +8,10 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://admin:mYWxRHtFO0pu
 
 const JWT_SECRET = process.env.JWT_SECRET || "wKtYc83sFLTICSgZ";
 
-const WEBSITE_URL: string = process.env.WEBSITE_URL || "";
+const WEBSITE_URL: string = process.env.WEBSITE_URL || "https://tesis-api-1.herokuapp.com/";
 if(WEBSITE_URL === "") throw new Error("WEBSITE_URL not declared");
 
-const BASE_URL: string = process.env.BASE_URL || "";
+const BASE_URL: string = process.env.BASE_URL || "https://tesis-api-1.herokuapp.com/";
 if(BASE_URL === "") throw new Error("BASE_URL not declared");
 
 const AUTH_TOKEN_EXPIRATION: string = process.env.AUTH_TOKEN_EXPIRATION || "86400" // 60 * 60 * 24
