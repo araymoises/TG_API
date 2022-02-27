@@ -1,10 +1,10 @@
 import { Router } from 'express'
 
-import getFees from '../api/fees/fees.router'
+import authRouter from '../api/auth/auth.router'
 
 export default () => {
 	const router = Router()
-	router.use('/obtener/tarifas/carriers', getFees)
+	router.use('/auth', authRouter)
 
     return router
 };

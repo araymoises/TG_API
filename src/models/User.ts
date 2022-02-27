@@ -51,9 +51,9 @@ import mongoose from 'mongoose'
 const userSchema = new mongoose.Schema({
     name: {type: String, required: true},
 	teacher: {type: mongoose.Types.ObjectId, ref: 'Teacher', required: true},
-    email: {type: String, required: true},
+    email: {type: String, required: true, unique: true, lowercase: true},
     password: {type: String, required: true, select: false},
-    status: {type: Boolean, required: true, default: true},
+    status: {type: Boolean, required: true, default: true, select: false},
     created: {type: Date, default: Date.now},
     modified: {type: Date, default: Date.now},
 	// progressStatus: {type: progressStatusSchema, required: false, default: {}},
