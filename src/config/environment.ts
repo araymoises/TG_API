@@ -14,7 +14,7 @@ if(WEBSITE_URL === "") throw new Error("WEBSITE_URL not declared");
 const BASE_URL: string = process.env.BASE_URL || "https://tesis-api-1.herokuapp.com/";
 if(BASE_URL === "") throw new Error("BASE_URL not declared");
 
-const AUTH_TOKEN_EXPIRATION: string = process.env.AUTH_TOKEN_EXPIRATION || "86400" // 60 * 60 * 24
+const AUTH_TOKEN_EXPIRATION: string = process.env.AUTH_TOKEN_EXPIRATION || "2592000" // 60 * 60 * 24 * 30
 
 export default {
     PORT: PORT,

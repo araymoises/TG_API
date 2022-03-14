@@ -85,7 +85,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         return res.status(500).send({
 			success: false,
 			code: 500,
-			message: 'No se pudo guardar el usuario.',
+			message: 'No se pudo crear el usuario.',
 			content: null
 		})
 	}
