@@ -47,9 +47,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
 	const {firstname, lastname, phone, email, password} = req.body
-
 	let encryptedPassword = (await Encrypter(password)).toString()
-	// let talves = await bcrypt.compare(password, crypt)
 
 	let teacher: any = new Teacher({
 		firstname,
