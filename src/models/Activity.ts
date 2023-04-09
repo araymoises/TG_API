@@ -1,9 +1,11 @@
 import mongoose from 'mongoose'
 
 require('./Content')
+require('./ActivityType')
 
 const activitySchema = new mongoose.Schema({
     content: {type: mongoose.Types.ObjectId, ref: 'Content', required: true},
+    activityType: {type: mongoose.Types.ObjectId, ref: 'ActivityType', required: true},
     name: {type: String, required: true},
     description: {type: String, required: true},
     max_qualification: {type: Number, required: true},
