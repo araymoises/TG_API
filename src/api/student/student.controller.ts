@@ -1,91 +1,94 @@
 import { Request, Response, NextFunction } from "express"
-import Classroom from "../../models/Classroom"
+import Student from "../../models/Student"
 
-export const getClassrooms = async (req: Request | any, res: Response) => {
+export const getStudents = async (req: Request | any, res: Response) => {
+    const { classroom } = req.params
+
     try {
-        const models = await Classroom.find({teacher: req.teacherId, status: true})
+        const models = await Student.find({classroom, status: true})
         .populate({ 
-            path: 'teacher'
+            path: 'classroom'
         })
 
         if(!models.length) 
             return res.status(404).send({
                 success: false,
                 code: 404,
-                message: 'Aulas no encontradas.',
+                message: 'Alumnos no encontrados.',
                 content: null
             })
 
         return res.status(201).send({
             success: true,
             code: 201,
-            message: '¡Aulas encontradas!',
+            message: 'Alumnos encontrados!',
             content: models
         })
     } catch(err) {
         return res.status(500).send({
             success: false,
             code: 500,
-            message: 'Aulas no encontradas.',
+            message: 'Alumnos no encontrados.',
             content: null
         })
     }
 }
 
-export const getClassroomById = async (req: Request | any, res: Response) => {
+export const getStudentById = async (req: Request | any, res: Response) => {
     const { id } = req.params
 
     try {
-        const model = await Classroom.findOne({ _id: id, status: true })
+        const model = await Student.findOne({ _id: id, status: true })
         .populate({ 
-            path: 'teacher'
+            path: 'classroom'
         })
 
         if(!model) 
             return res.status(404).send({
                 success: false,
                 code: 404,
-                message: 'Aula no encontrada.',
+                message: 'Alumno no encontrado.',
                 content: null
             })
 
         return res.status(201).send({
             success: true,
             code: 201,
-            message: '¡Aula encontrada!',
+            message: 'Alumno encontrado!',
             content: model
         })
     } catch(err) {
         return res.status(500).send({
             success: false,
             code: 500,
-            message: 'Aula no encontrada.',
+            message: 'Alumno no encontrado.',
             content: null
         })
     }
 }
 
-export const saveClassroom = async (req: Request | any, res: Response) => {
-	const {name, description} = req.body
+export const saveStudent = async (req: Request | any, res: Response) => {
+	const {classroom, firstname, lastname, email} = req.body
 
     try {
-        let model: any = new Classroom({
-            teacher: req.teacherId,
-            name,
-            description
+        let model: any = new Student({
+            classroom,
+            firstname,
+            lastname,
+            email
         })
     
         try {
             model = await model.save()
     
-            model = await Classroom.populate(model, [
-                { path: 'teacher' }
+            model = await Student.populate(model, [
+                { path: 'classroom' }
             ])
     
             return res.status(201).send({
                 success: true,
                 code: 201,
-                message: '¡Aula creada exitosamente!',
+                message: '¡Alumno creado exitosamente!',
                 content: model
             })
         } catch (err) {
@@ -93,7 +96,7 @@ export const saveClassroom = async (req: Request | any, res: Response) => {
             return res.status(500).send({
                 success: false,
                 code: 500,
-                message: 'No se pudo crear el aula.',
+                message: 'No se pudo crear el Alumno.',
                 content: null
             })
         }
@@ -102,84 +105,90 @@ export const saveClassroom = async (req: Request | any, res: Response) => {
         return res.status(500).send({
             success: false,
             code: 500,
-            message: 'No se pudo crear el aula.',
+            message: 'No se pudo crear el Alumno.',
             content: null
         })
     }
 }
 
-export const updateClassroomById = async (req: Request | any, res: Response) => {
-    const { name, description } = req.body
+export const updateStudentById = async (req: Request | any, res: Response) => {
+	const {classroom, firstname, lastname, email} = req.body
     const { id } = req.params
 
     try {
-        let fields = await Classroom.findOne({ _id: id, status: true })
+        let fields = await Student.findOne({ _id: id, status: true })
 
         if(!fields) 
             return res.status(404).send({
                 success: false,
                 code: 404,
-                message: 'Aula no encontrada.',
+                message: 'Alumno no encontrado.',
                 content: null
             })
 
-        if (name) {
-            fields.name = name
+        if (classroom) {
+            fields.classroom = classroom
         }
-        if (description) {
-            fields.description = description
+        if (firstname) {
+            fields.firstname = firstname
+        }
+        if (lastname) {
+            fields.lastname = lastname
+        }
+        if (email) {
+            fields.email = email
         }
 
-        await Classroom.updateOne({ _id: id, status: true }, fields)
+        await Student.updateOne({ _id: id, status: true }, fields)
         .populate({ 
-            path: 'teacher'
+            path: 'classroom'
         })
 
         return res.status(200).send({
             success: true,
             code: 200,
-            message: '¡Aula actualizada correctamente!',
+            message: 'Alumno actualizado correctamente!',
             content: fields
         })
     } catch(err) {
         return res.status(500).send({
             success: false,
             code: 500,
-            message: 'Aula no pudo ser actualizada.',
+            message: 'Alumno no pudo ser actualizado.',
             content: null
         })
     }
 }
 
-export const deleteClassroom = async (req: Request | any, res: Response) => {
+export const deleteStudent = async (req: Request | any, res: Response) => {
     const { id } = req.params
 
     try {
-        let fields = await Classroom.findOne({ _id: id, status: true })
+        let fields = await Student.findOne({ _id: id, status: true })
 
         if(!fields) 
             return res.status(404).send({
                 success: false,
                 code: 404,
-                message: 'Aula no encontrada.',
+                message: 'Alumno no encontrado.',
                 content: null
             })
 
         fields.status = false
 
-        await Classroom.updateOne({ _id: id, status: true }, fields)
+        await Student.updateOne({ _id: id, status: true }, fields)
 
         return res.status(200).send({
             success: true,
             code: 200,
-            message: '¡Aula eliminada correctamente!',
+            message: 'Alumno eliminado correctamente!',
             content: fields
         })
     } catch(err) {
         return res.status(500).send({
             success: false,
             code: 500,
-            message: 'Aula no pudo ser eliminada.',
+            message: 'Alumno no pudo ser eliminado.',
             content: null
         })
     }
