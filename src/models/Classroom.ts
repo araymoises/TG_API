@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 require('./Teacher')
+require('./Student')
 
 const classroomSchema = new mongoose.Schema({
     teacher: {type: mongoose.Types.ObjectId, ref: 'Teacher', required: true},
@@ -10,5 +11,14 @@ const classroomSchema = new mongoose.Schema({
     created: {type: Date, default: Date.now},
     modified: {type: Date, default: Date.now}
 }, { toJSON: { virtuals: true } })
+
+classroomSchema.virtual('students',
+	{
+		ref: "Student",
+		localField: "_id",
+		foreignField: "classroom",
+		justOne: false
+	}
+)
 
 export default mongoose.model<any>('Classroom', classroomSchema, 'classrooms')

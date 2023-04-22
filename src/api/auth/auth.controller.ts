@@ -79,12 +79,13 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 			content: user
 		})
 	} catch (err: any) {
-    let errorMessage: string = '';
-    let message: string = '';
+    let errorMessage: string = ''
+    let message: string = ''
+
     if (err.name && err.name == 'MongoError' && err.code == '11000') {
-      errorMessage = message = 'El correo ya está siendo utilizado';
+      errorMessage = message = 'El correo ya está siendo utilizado'
     } else {
-      errorMessage = err.message;
+      errorMessage = err.message
       message = 'No se pudo crear el usuario.'
     }
 
