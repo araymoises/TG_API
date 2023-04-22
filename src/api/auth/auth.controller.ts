@@ -10,11 +10,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 	const user = await User.findOne({email})
 		.select("+password")
-		.populate({ 
-			path: 'teacher' 	
+		.populate({
+			path: 'teacher'
 		})
 
-	if(!user) 
+	if(!user)
 		return res.status(401).send({
 			success: false,
 			code: 401,
@@ -23,7 +23,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 		})
 
 	const samePassword : boolean = await bcrypt.compare(password, user.password);
-	if(!samePassword) 
+	if(!samePassword)
 		return res.status(401).send({
 			success: false,
 			code: 401,
@@ -78,12 +78,21 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 			message: '¡Usuario creado exitosamente!',
 			content: user
 		})
-	} catch (err) {
-		console.log(err)
-        return res.status(500).send({
+	} catch (err: any) {
+    let errorMessage: string = '';
+    let message: string = '';
+    if (err.name && err.name == 'MongoError' && err.code == '11000') {
+      errorMessage = message = 'El correo ya está siendo utilizado';
+    } else {
+      errorMessage = err.message;
+      message = 'No se pudo crear el usuario.'
+    }
+
+    return res.status(500).send({
 			success: false,
 			code: 500,
-			message: 'No se pudo crear el usuario.',
+			message,
+      error: errorMessage,
 			content: null
 		})
 	}
