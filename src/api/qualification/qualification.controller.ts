@@ -6,13 +6,13 @@ export const getQualificationsByActivity = async (req: Request | any, res: Respo
 
     try {
         const models = await Qualification.find({activity, status: true})
-        .populate([{ 
+        .populate([{
             path: 'activity'
-        }, { 
+        }, {
             path: 'student'
         }])
 
-        if(!models.length) 
+        if(!models.length)
             return res.status(404).send({
                 success: false,
                 code: 404,
@@ -41,13 +41,13 @@ export const getQualificationsByStudent = async (req: Request | any, res: Respon
 
     try {
         const models = await Qualification.find({student, status: true})
-        .populate([{ 
+        .populate([{
             path: 'activity'
-        }, { 
+        }, {
             path: 'student'
         }])
 
-        if(!models.length) 
+        if(!models.length)
             return res.status(404).send({
                 success: false,
                 code: 404,
@@ -76,13 +76,13 @@ export const getQualificationById = async (req: Request | any, res: Response) =>
 
     try {
         const model = await Qualification.findOne({ _id: id, status: true })
-        .populate([{ 
+        .populate([{
             path: 'activity'
-        }, { 
+        }, {
             path: 'student'
         }])
 
-        if(!model) 
+        if(!model)
             return res.status(404).send({
                 success: false,
                 code: 404,
@@ -115,16 +115,16 @@ export const saveQualification = async (req: Request | any, res: Response) => {
             student,
             qualification
         })
-    
+
         try {
             model = await model.save()
-    
-            model = await Qualification.populate(model, [{ 
+
+            model = await Qualification.populate(model, [{
                 path: 'activity'
-            }, { 
+            }, {
                 path: 'student'
             }])
-    
+
             return res.status(201).send({
                 success: true,
                 code: 201,
@@ -136,7 +136,7 @@ export const saveQualification = async (req: Request | any, res: Response) => {
             return res.status(500).send({
                 success: false,
                 code: 500,
-                message: 'No se pudo crear la Calificación.',
+                message: 'No se pudo crear la calificación.',
                 content: null
             })
         }
@@ -145,7 +145,7 @@ export const saveQualification = async (req: Request | any, res: Response) => {
         return res.status(500).send({
             success: false,
             code: 500,
-            message: 'No se pudo crear la Calificación.',
+            message: 'No se pudo crear la calificación.',
             content: null
         })
     }
@@ -158,7 +158,7 @@ export const updateQualificationById = async (req: Request | any, res: Response)
     try {
         let fields = await Qualification.findOne({ _id: id, status: true })
 
-        if(!fields) 
+        if(!fields)
             return res.status(404).send({
                 success: false,
                 code: 404,
@@ -180,9 +180,9 @@ export const updateQualificationById = async (req: Request | any, res: Response)
         }
 
         await Qualification.updateOne({ _id: id, status: true }, fields)
-        .populate([{ 
+        .populate([{
             path: 'activity'
-        }, { 
+        }, {
             path: 'student'
         }])
 
@@ -208,7 +208,7 @@ export const deleteQualification = async (req: Request | any, res: Response) => 
     try {
         let fields = await Qualification.findOne({ _id: id, status: true })
 
-        if(!fields) 
+        if(!fields)
             return res.status(404).send({
                 success: false,
                 code: 404,

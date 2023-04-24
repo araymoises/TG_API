@@ -12,4 +12,13 @@ const objectSchema = new mongoose.Schema({
     modified: {type: Date, default: Date.now}
 }, { toJSON: { virtuals: true } })
 
+objectSchema.virtual('resources',
+  {
+    ref: "Resource",
+    localField: "_id",
+    foreignField: "object",
+    justOne: false
+  }
+)
+
 export default mongoose.model<any>('Object', objectSchema, 'objects')

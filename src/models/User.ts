@@ -19,11 +19,11 @@ import mongoose from 'mongoose'
 //     isStarted: {type: Boolean, default: false},
 //     startDate: {type: Date, required: false},
 //     starter: {type: mongoose.Types.ObjectId, ref: 'Person', required: false},
-	
+
 // 	isFinished: {type: Boolean, default: false},
 //     finishDate: {type: Date, required: false},
 // 	finisher: {type: mongoose.Types.ObjectId, ref: 'Person', required: false},
-	
+
 // 	isChecked: {type: Boolean, default: false},
 //     checkDate: {type: Date, required: false},
 //     checker: {type: mongoose.Types.ObjectId, ref: 'Person', required: false},
@@ -49,25 +49,25 @@ import mongoose from 'mongoose'
 // });
 
 const userSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-	teacher: {type: mongoose.Types.ObjectId, ref: 'Teacher', required: true},
-    email: {type: String, required: true, unique: true, lowercase: true},
-    password: {type: String, required: true, select: false},
-    status: {type: Boolean, required: true, default: true, select: false},
-    created: {type: Date, default: Date.now},
-    modified: {type: Date, default: Date.now},
-	// progressStatus: {type: progressStatusSchema, required: false, default: {}},
-	// projectedStartDate: {type: Date},
-	// projectedFinishDate: {type: Date},
-	// resources: [{type: mongoose.Types.ObjectId, ref: 'Resource', required: false}],
-	// ownResource: {type: ownResource},
-	// duaRecommendedActivities: [{type: mongoose.Types.ObjectId, ref: 'DuaRecommendedActivity', required: false}],
-    // status: {type: String},
-    // created: {type: Date, default: Date.now},
-    // modified: {type: Date, default: Date.now},
+  name: { type: String, required: true },
+  teacher: { type: mongoose.Types.ObjectId, ref: 'Teacher', required: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  password: { type: String, required: true, select: false },
+  status: { type: Boolean, required: true, default: true, select: false },
+  created: { type: Date, default: Date.now },
+  modified: { type: Date, default: Date.now },
+  // progressStatus: {type: progressStatusSchema, required: false, default: {}},
+  // projectedStartDate: {type: Date},
+  // projectedFinishDate: {type: Date},
+  // resources: [{type: mongoose.Types.ObjectId, ref: 'Resource', required: false}],
+  // ownResource: {type: ownResource},
+  // duaRecommendedActivities: [{type: mongoose.Types.ObjectId, ref: 'DuaRecommendedActivity', required: false}],
+  // status: {type: String},
+  // created: {type: Date, default: Date.now},
+  // modified: {type: Date, default: Date.now},
 }, { toJSON: { virtuals: true } })
 
-// userSchema.virtual('activityMessages', 
+// userSchema.virtual('activityMessages',
 // 	{
 // 		ref: "ActivityMessage",
 // 		localField: "_id",
