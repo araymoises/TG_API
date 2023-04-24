@@ -111,7 +111,7 @@ export const saveContent = async (req: Request | any, res: Response) => {
 }
 
 export const updateContentById = async (req: Request | any, res: Response) => {
-  const { classroom, firstname, lastname, email } = req.body
+  const { name, description, classroom } = req.body
   const { id } = req.params
 
   try {
@@ -128,14 +128,11 @@ export const updateContentById = async (req: Request | any, res: Response) => {
     if (classroom) {
       fields.classroom = classroom
     }
-    if (firstname) {
-      fields.firstname = firstname
+    if (name) {
+      fields.name = name
     }
-    if (lastname) {
-      fields.lastname = lastname
-    }
-    if (email) {
-      fields.email = email
+    if (description) {
+      fields.description = description
     }
 
     await Content.updateOne({ _id: id, status: true }, fields)
