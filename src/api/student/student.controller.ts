@@ -25,11 +25,13 @@ export const getStudents = async (req: Request | any, res: Response) => {
       message: 'Alumnos encontrados!',
       content: models
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Alumnos no encontrados.',
+      error: err.message,
       content: null
     })
   }
@@ -58,11 +60,13 @@ export const getStudentById = async (req: Request | any, res: Response) => {
       message: 'Alumno encontrado!',
       content: model
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Alumno no encontrado.',
+      error: err.message,
       content: null
     })
   }
@@ -101,12 +105,13 @@ export const saveStudent = async (req: Request | any, res: Response) => {
         content: null
       })
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'No se pudo crear el alumno.',
+      error: err.message,
       content: null
     })
   }
@@ -151,11 +156,13 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
       message: 'Alumno actualizado correctamente!',
       content: fields
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Alumno no pudo ser actualizado.',
+      error: err.message,
       content: null
     })
   }
@@ -185,11 +192,13 @@ export const deleteStudent = async (req: Request | any, res: Response) => {
       message: 'Alumno eliminado correctamente!',
       content: fields
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Alumno no pudo ser eliminado.',
+      error: err.message,
       content: null
     })
   }
@@ -257,7 +266,7 @@ export const inviteStudent = async (req: Request | any, res: Response) => {
         return res.status(500).send({
           success: false,
           code: 500,
-          message: 'No se pudo invitar al Alumno.',
+          message: 'No se pudo invitar al alumno.',
           error: err.message,
           content: null
         })
@@ -275,7 +284,7 @@ export const inviteStudent = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'No se pudo invitar al Alumno.',
+      message: 'No se pudo invitar al alumno.',
       error: err.message,
       content: null
     })

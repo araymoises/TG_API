@@ -34,11 +34,13 @@ export const getClassrooms = async (req: Request | any, res: Response) => {
       message: '¡Aulas encontradas!',
       content: result
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Aulas no encontradas.',
+      error: err.message,
       content: null
     })
   }
@@ -56,17 +58,19 @@ export const getClassroomById = async (req: Request | any, res: Response) => {
         path: 'students'
       })
 
+
     let result: any;
-    result = JSON.parse(JSON.stringify(model))
-    result.studentsQuantity = model.students.length
 
     if (!model)
-      return res.status(404).send({
-        success: false,
-        code: 404,
-        message: 'Aula no encontrada.',
-        content: null
-      })
+    return res.status(404).send({
+      success: false,
+      code: 404,
+      message: 'Aula no encontrada.',
+      content: null
+    })
+
+    result = JSON.parse(JSON.stringify(model))
+    result.studentsQuantity = model.students.length
 
     return res.status(201).send({
       success: true,
@@ -75,6 +79,7 @@ export const getClassroomById = async (req: Request | any, res: Response) => {
       content: result
     })
   } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
@@ -108,21 +113,23 @@ export const saveClassroom = async (req: Request | any, res: Response) => {
         message: '¡Aula creada exitosamente!',
         content: model
       })
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
       return res.status(500).send({
         success: false,
         code: 500,
         message: 'No se pudo crear el aula.',
+        error: err.message,
         content: null
       })
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'No se pudo crear el aula.',
+      error: err.message,
       content: null
     })
   }
@@ -161,11 +168,13 @@ export const updateClassroomById = async (req: Request | any, res: Response) => 
       message: '¡Aula actualizada correctamente!',
       content: fields
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Aula no pudo ser actualizada.',
+      error: err.message,
       content: null
     })
   }
@@ -195,11 +204,13 @@ export const deleteClassroom = async (req: Request | any, res: Response) => {
       message: '¡Aula eliminada correctamente!',
       content: fields
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Aula no pudo ser eliminada.',
+      error: err.message,
       content: null
     })
   }

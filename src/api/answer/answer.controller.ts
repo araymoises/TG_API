@@ -1,27 +1,24 @@
 import { Request, Response, NextFunction } from "express"
-import Content from "../../models/Content"
+import Answer from "../../models/Answer"
 
-export const getContents = async (req: Request | any, res: Response) => {
-  const { classroom } = req.params
+export const getAnswers = async (req: Request | any, res: Response) => {
+  const { activity } = req.params
 
   try {
-    const models = await Content.find({ classroom, status: true })
-      .populate({
-        path: 'classroom'
-      })
+    const models = await Answer.find({ activity, status: true })
 
     if (!models.length)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenidos no encontrados.',
+        message: 'Respuestas no encontradas.',
         content: null
       })
 
     return res.status(201).send({
       success: true,
       code: 201,
-      message: 'Contenidos encontrados!',
+      message: 'Respuestas encontradas!',
       content: models
     })
   } catch (err: any) {
@@ -29,34 +26,31 @@ export const getContents = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenidos no encontrados.',
+      message: 'Respuestas no encontradas.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const getContentById = async (req: Request | any, res: Response) => {
+export const getAnswerById = async (req: Request | any, res: Response) => {
   const { id } = req.params
 
   try {
-    const model = await Content.findOne({ _id: id, status: true })
-      .populate({
-        path: 'classroom'
-      })
+    const model = await Answer.findOne({ _id: id, status: true })
 
     if (!model)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenido no encontrado.',
+        message: 'Respuesta no encontrada.',
         content: null
       })
 
     return res.status(201).send({
       success: true,
       code: 201,
-      message: 'Contenido encontrado!',
+      message: 'Respuesta encontrada!',
       content: model
     })
   } catch (err: any) {
@@ -64,34 +58,30 @@ export const getContentById = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenido no encontrado.',
+      message: 'Respuesta no encontrada.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const saveContent = async (req: Request | any, res: Response) => {
-  const { name, description, classroom } = req.body
+export const saveAnswer = async (req: Request | any, res: Response) => {
+  const { activity, title, isCorrect } = req.body
 
   try {
-    let model: any = new Content({
-      name,
-      description,
-      classroom
+    let model: any = new Answer({
+      activity,
+      title,
+      isCorrect
     })
 
     try {
       model = await model.save()
 
-      model = await Content.populate(model, [
-        { path: 'classroom' }
-      ])
-
       return res.status(201).send({
         success: true,
         code: 201,
-        message: '¡Contenido creado exitosamente!',
+        message: 'Respuesta creada exitosamente!',
         content: model
       })
     } catch (err) {
@@ -99,7 +89,7 @@ export const saveContent = async (req: Request | any, res: Response) => {
       return res.status(500).send({
         success: false,
         code: 500,
-        message: 'No se pudo crear el contenido.',
+        message: 'No se pudo crear la respuesta.',
         content: null
       })
     }
@@ -108,47 +98,44 @@ export const saveContent = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'No se pudo crear el contenido.',
+      message: 'No se pudo crear la respuesta.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const updateContentById = async (req: Request | any, res: Response) => {
-  const { name, description, classroom } = req.body
+export const updateAnswerById = async (req: Request | any, res: Response) => {
+  const { activity, title, isCorrect } = req.body
   const { id } = req.params
 
   try {
-    let fields = await Content.findOne({ _id: id, status: true })
+    let fields = await Answer.findOne({ _id: id, status: true })
 
     if (!fields)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenido no encontrado.',
+        message: 'Respuesta no encontrada.',
         content: null
       })
 
-    if (classroom) {
-      fields.classroom = classroom
+    if (activity) {
+      fields.activity = activity
     }
-    if (name) {
-      fields.name = name
+    if (title) {
+      fields.title = title
     }
-    if (description) {
-      fields.description = description
+    if (isCorrect) {
+      fields.isCorrect = isCorrect
     }
 
-    await Content.updateOne({ _id: id, status: true }, fields)
-      .populate({
-        path: 'classroom'
-      })
+    await Answer.updateOne({ _id: id, status: true }, fields)
 
     return res.status(200).send({
       success: true,
       code: 200,
-      message: 'Contenido actualizado correctamente!',
+      message: 'Respuesta actualizada correctamente!',
       content: fields
     })
   } catch (err: any) {
@@ -156,35 +143,35 @@ export const updateContentById = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenido no pudo ser actualizado.',
+      message: 'Respuesta no pudo ser actualizada.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const deleteContent = async (req: Request | any, res: Response) => {
+export const deleteAnswer = async (req: Request | any, res: Response) => {
   const { id } = req.params
 
   try {
-    let fields = await Content.findOne({ _id: id, status: true })
+    let fields = await Answer.findOne({ _id: id, status: true })
 
     if (!fields)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenido no encontrado.',
+        message: 'Respuesta no encontrada.',
         content: null
       })
 
     fields.status = false
 
-    await Content.updateOne({ _id: id, status: true }, fields)
+    await Answer.updateOne({ _id: id, status: true }, fields)
 
     return res.status(200).send({
       success: true,
       code: 200,
-      message: 'Contenido eliminado correctamente!',
+      message: 'Respuesta eliminada correctamente!',
       content: fields
     })
   } catch (err: any) {
@@ -192,7 +179,7 @@ export const deleteContent = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenido no pudo ser eliminado.',
+      message: 'Respuesta no pudo ser eliminada.',
       error: err.message,
       content: null
     })

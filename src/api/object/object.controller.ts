@@ -24,11 +24,13 @@ export const getObjects = async (req: Request | any, res: Response) => {
       message: 'Objetos 3D encontrados!',
       content: models
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Alumnos no encontrados.',
+      error: err.message,
       content: null
     })
   }
@@ -57,11 +59,13 @@ export const getObjectById = async (req: Request | any, res: Response) => {
       message: 'Objeto 3D encontrado!',
       content: model
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Objeto 3D no encontrado.',
+      error: err.message,
       content: null
     })
   }
@@ -116,19 +120,20 @@ export const saveObject = async (req: Request | any, res: Response) => {
         content: null
       })
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'No se pudo crear el objeto 3D.',
+      error: err.message,
       content: null
     })
   }
 }
 
 export const updateObjectById = async (req: Request | any, res: Response) => {
-  const { classroom, firstname, lastname, email } = req.body
+  const { name, sourcePath, type, scale, position, rotationPivot } = req.body
   const { id } = req.params
 
   try {
@@ -142,17 +147,23 @@ export const updateObjectById = async (req: Request | any, res: Response) => {
         content: null
       })
 
-    if (classroom) {
-      fields.classroom = classroom
+    if (name) {
+      fields.name = name
     }
-    if (firstname) {
-      fields.firstname = firstname
+    if (sourcePath) {
+      fields.sourcePath = sourcePath
     }
-    if (lastname) {
-      fields.lastname = lastname
+    if (type) {
+      fields.type = type
     }
-    if (email) {
-      fields.email = email
+    if (scale) {
+      fields.scale = scale
+    }
+    if (position) {
+      fields.position = position
+    }
+    if (rotationPivot) {
+      fields.rotationPivot = rotationPivot
     }
 
     await ThreeDObject.updateOne({ _id: id, status: true }, fields)
@@ -166,11 +177,13 @@ export const updateObjectById = async (req: Request | any, res: Response) => {
       message: 'Objeto 3D actualizado correctamente!',
       content: fields
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Objeto 3D no pudo ser actualizado.',
+      error: err.message,
       content: null
     })
   }
@@ -181,7 +194,7 @@ export const deleteObject = async (req: Request | any, res: Response) => {
 
   try {
     let fields = await ThreeDObject.findOne({ _id: id, status: true })
-    let resources = await ThreeDObjectResource.find({ object: id, status: true })
+    // let resources = await ThreeDObjectResource.find({ object: id, status: true })
 
     if (!fields)
       return res.status(404).send({
@@ -205,11 +218,13 @@ export const deleteObject = async (req: Request | any, res: Response) => {
       message: 'Objeto 3D eliminado correctamente!',
       content: fields
     })
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err)
     return res.status(500).send({
       success: false,
       code: 500,
       message: 'Objeto 3D no pudo ser eliminado.',
+      error: err.message,
       content: null
     })
   }

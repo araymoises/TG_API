@@ -1,27 +1,24 @@
 import { Request, Response, NextFunction } from "express"
-import Content from "../../models/Content"
+import ActivityType from "../../models/ActivityType"
 
-export const getContents = async (req: Request | any, res: Response) => {
-  const { classroom } = req.params
+export const getActivityTypes = async (req: Request | any, res: Response) => {
+  // const { classroom } = req.params
 
   try {
-    const models = await Content.find({ classroom, status: true })
-      .populate({
-        path: 'classroom'
-      })
+    const models = await ActivityType.find({ status: true })
 
     if (!models.length)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenidos no encontrados.',
+        message: 'Tipos de actividades no encontrados.',
         content: null
       })
 
     return res.status(201).send({
       success: true,
       code: 201,
-      message: 'Contenidos encontrados!',
+      message: 'Tipos de actividades encontrados!',
       content: models
     })
   } catch (err: any) {
@@ -29,34 +26,31 @@ export const getContents = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenidos no encontrados.',
+      message: 'Tipos de actividades no encontrados.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const getContentById = async (req: Request | any, res: Response) => {
+export const getActivityTypeById = async (req: Request | any, res: Response) => {
   const { id } = req.params
 
   try {
-    const model = await Content.findOne({ _id: id, status: true })
-      .populate({
-        path: 'classroom'
-      })
+    const model = await ActivityType.findOne({ _id: id, status: true })
 
     if (!model)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenido no encontrado.',
+        message: 'Tipo de actividad no encontrado.',
         content: null
       })
 
     return res.status(201).send({
       success: true,
       code: 201,
-      message: 'Contenido encontrado!',
+      message: 'Tipo de actividad encontrado!',
       content: model
     })
   } catch (err: any) {
@@ -64,34 +58,29 @@ export const getContentById = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenido no encontrado.',
+      message: 'Tipo de actividad no encontrado.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const saveContent = async (req: Request | any, res: Response) => {
-  const { name, description, classroom } = req.body
+export const saveActivityType = async (req: Request | any, res: Response) => {
+  const { code, name } = req.body
 
   try {
-    let model: any = new Content({
-      name,
-      description,
-      classroom
+    let model: any = new ActivityType({
+      code,
+      name
     })
 
     try {
       model = await model.save()
 
-      model = await Content.populate(model, [
-        { path: 'classroom' }
-      ])
-
       return res.status(201).send({
         success: true,
         code: 201,
-        message: '¡Contenido creado exitosamente!',
+        message: 'Tipo de actividad creado exitosamente!',
         content: model
       })
     } catch (err) {
@@ -99,7 +88,7 @@ export const saveContent = async (req: Request | any, res: Response) => {
       return res.status(500).send({
         success: false,
         code: 500,
-        message: 'No se pudo crear el contenido.',
+        message: 'No se pudo crear el tipo de actividad.',
         content: null
       })
     }
@@ -108,47 +97,41 @@ export const saveContent = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'No se pudo crear el contenido.',
+      message: 'No se pudo crear el tipo de actividad.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const updateContentById = async (req: Request | any, res: Response) => {
-  const { name, description, classroom } = req.body
+export const updateActivityTypeById = async (req: Request | any, res: Response) => {
+  const { code, name } = req.body
   const { id } = req.params
 
   try {
-    let fields = await Content.findOne({ _id: id, status: true })
+    let fields = await ActivityType.findOne({ _id: id, status: true })
 
     if (!fields)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenido no encontrado.',
+        message: 'Tipo de actividad no encontrado.',
         content: null
       })
 
-    if (classroom) {
-      fields.classroom = classroom
+    if (code) {
+      fields.code = code
     }
     if (name) {
       fields.name = name
     }
-    if (description) {
-      fields.description = description
-    }
 
-    await Content.updateOne({ _id: id, status: true }, fields)
-      .populate({
-        path: 'classroom'
-      })
+    await ActivityType.updateOne({ _id: id, status: true }, fields)
 
     return res.status(200).send({
       success: true,
       code: 200,
-      message: 'Contenido actualizado correctamente!',
+      message: 'Tipo de actividad actualizado correctamente!',
       content: fields
     })
   } catch (err: any) {
@@ -156,35 +139,35 @@ export const updateContentById = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenido no pudo ser actualizado.',
+      message: 'Tipo de actividad no pudo ser actualizado.',
       error: err.message,
       content: null
     })
   }
 }
 
-export const deleteContent = async (req: Request | any, res: Response) => {
+export const deleteActivityType = async (req: Request | any, res: Response) => {
   const { id } = req.params
 
   try {
-    let fields = await Content.findOne({ _id: id, status: true })
+    let fields = await ActivityType.findOne({ _id: id, status: true })
 
     if (!fields)
       return res.status(404).send({
         success: false,
         code: 404,
-        message: 'Contenido no encontrado.',
+        message: 'Tipo de actividad no encontrado.',
         content: null
       })
 
     fields.status = false
 
-    await Content.updateOne({ _id: id, status: true }, fields)
+    await ActivityType.updateOne({ _id: id, status: true }, fields)
 
     return res.status(200).send({
       success: true,
       code: 200,
-      message: 'Contenido eliminado correctamente!',
+      message: 'Tipo de actividad eliminado correctamente!',
       content: fields
     })
   } catch (err: any) {
@@ -192,7 +175,7 @@ export const deleteContent = async (req: Request | any, res: Response) => {
     return res.status(500).send({
       success: false,
       code: 500,
-      message: 'Contenido no pudo ser eliminado.',
+      message: 'Tipo de actividad no pudo ser eliminado.',
       error: err.message,
       content: null
     })
