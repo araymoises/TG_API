@@ -4,29 +4,61 @@ import Student from "../../models/Student"
 
 export const getClassrooms = async (req: Request | any, res: Response) => {
   try {
-    const models = await Classroom.find({ teacher: req.teacherId, status: true })
-      .populate({
-        path: 'teacher'
-      })
-      .populate({
-        path: 'students'
-      })
+    let models;
+    let result;
+    if (req.isTeacher) {
+      models = await Classroom.find({ teacher: req.teacherId, status: true })
+        .populate({
+          path: 'teacher',
+          match: { status: true }
+        })
+        .populate({
+          path: 'students',
+          match: { status: true }
+        })
 
-    const result = models.map((model: any) => {
-      let res: any;
-      res = JSON.parse(JSON.stringify(model))
-      res.studentsQuantity = model.students.length
+      if (!models.length)
+        return res.status(404).send({
+          success: false,
+          code: 404,
+          message: 'Aulas no encontradas.',
+          content: null
+        })
 
-      return res;
-    })
+      result = models.map((model: any) => {
+        let res: any;
+        res = JSON.parse(JSON.stringify(model))
+        res.studentsQuantity = model.students.length
 
-    if (!models.length)
-      return res.status(404).send({
-        success: false,
-        code: 404,
-        message: 'Aulas no encontradas.',
-        content: null
+        return res;
       })
+    } else {
+      models = await Student.findOne({ _id: req.studentId, status: true })
+        .populate({
+          path: 'classroom',
+          match: { status: true },
+          populate: [{
+            path: 'teacher',
+            match: { status: true }
+          },
+          {
+            path: 'students',
+            match: { status: true }
+          }]
+        })
+
+      models = JSON.parse(JSON.stringify(models))
+      if (!models.classroom)
+        return res.status(404).send({
+          success: false,
+          code: 404,
+          message: 'Aulas no encontradas.',
+          content: null
+        })
+
+      models.classroom.studentsQuantity = models.classroom.students.length
+      result = [models.classroom]
+    }
 
     return res.status(201).send({
       success: true,
@@ -62,12 +94,12 @@ export const getClassroomById = async (req: Request | any, res: Response) => {
     let result: any;
 
     if (!model)
-    return res.status(404).send({
-      success: false,
-      code: 404,
-      message: 'Aula no encontrada.',
-      content: null
-    })
+      return res.status(404).send({
+        success: false,
+        code: 404,
+        message: 'Aula no encontrada.',
+        content: null
+      })
 
     result = JSON.parse(JSON.stringify(model))
     result.studentsQuantity = model.students.length

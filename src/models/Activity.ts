@@ -4,6 +4,7 @@ require('./Content')
 require('./ActivityType')
 require('./Object')
 require('./Answer')
+require('./Qualification')
 
 const activitySchema = new mongoose.Schema({
   content: { type: mongoose.Types.ObjectId, ref: 'Content', required: true },
@@ -23,6 +24,15 @@ const activitySchema = new mongoose.Schema({
 activitySchema.virtual('answers',
   {
     ref: "Answer",
+    localField: "_id",
+    foreignField: "activity",
+    justOne: false
+  }
+)
+
+activitySchema.virtual('qualifications',
+  {
+    ref: "Qualification",
     localField: "_id",
     foreignField: "activity",
     justOne: false

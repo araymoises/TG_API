@@ -137,12 +137,13 @@ export const saveQualification = async (req: Request | any, res: Response) => {
         message: 'Calificación creada exitosamente!',
         content: model
       })
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
       return res.status(500).send({
         success: false,
         code: 500,
         message: 'No se pudo crear la calificación.',
+        error: err.message,
         content: null
       })
     }

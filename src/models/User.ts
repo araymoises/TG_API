@@ -48,9 +48,11 @@ import mongoose from 'mongoose'
 // 	link: {type: String, required: false},
 // });
 
+require('./Teacher')
+require('./Student')
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  teacher: { type: mongoose.Types.ObjectId, ref: 'Teacher', required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
   status: { type: Boolean, required: true, default: true, select: false },
@@ -67,14 +69,23 @@ const userSchema = new mongoose.Schema({
   // modified: {type: Date, default: Date.now},
 }, { toJSON: { virtuals: true } })
 
-// userSchema.virtual('activityMessages',
-// 	{
-// 		ref: "ActivityMessage",
-// 		localField: "_id",
-// 		foreignField: "activity",
-// 		justOne: false
-// 	}
-// )
+userSchema.virtual('teacher',
+	{
+		ref: "Teacher",
+		localField: "_id",
+		foreignField: "user",
+		justOne: true
+	}
+)
+
+userSchema.virtual('student',
+	{
+		ref: "Student",
+		localField: "_id",
+		foreignField: "user",
+		justOne: true
+	}
+)
 
 // export default mongoose.model<IActivity>('User', userSchema, 'users');
 export default mongoose.model<any>('User', userSchema, 'users')

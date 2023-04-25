@@ -21,6 +21,8 @@ export const getActivities = async (req: Request | any, res: Response) => {
             path: 'object'
           }, {
             path: 'answers'
+          }, {
+            path: 'qualifications'
           }]
         }
       })
