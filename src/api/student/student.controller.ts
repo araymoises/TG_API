@@ -228,13 +228,13 @@ const decode = (str) => {
 }
 
 export const inviteStudent = async (req: Request | any, res: Response) => {
-  const { email } = req.body
+  const { email, classroom } = req.body
 
   const host = 'http://arclassroom.app/'
   const timeInt = new Date().valueOf();
 
   try {
-    const invitationLink = `${host}${encode(email)}.${timeInt}`;
+    const invitationLink = `${host}${encode(email)}.${classroom}.${timeInt}`;
 
     const mailer = nodemailer.createTransport({
       service: 'gmail',
