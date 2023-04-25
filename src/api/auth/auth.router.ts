@@ -7,7 +7,7 @@ const upload = multer({dest: '/tmp/files/'})
 
 const router: Router = Router({ mergeParams : true })
 
-router.post('/teachers/login', login)
+router.post('/login', login)
 router.post('/teachers/signup', teacherSignup)
 router.post('/students/signup', studentSignup)
 
