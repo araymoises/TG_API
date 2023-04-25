@@ -6,51 +6,14 @@ import Encrypter from "../../services/encrypter.service"
 import GenerateToken from "../../services/generateToken.service"
 import bcrypt from 'bcryptjs'
 
-export const teacherLogin = async (req: Request, res: Response, next: NextFunction) => {
-	const {email, password} = req.body
+export const login = async (req: Request, res: Response, next: NextFunction) => {
+	const { email, password } = req.body
 
 	const user = await User.findOne({email})
 		.select("+password")
 		.populate({
 			path: 'teacher'
 		})
-
-	if(!user)
-		return res.status(401).send({
-			success: false,
-			code: 401,
-			message: 'Usuario no encontrado.',
-			content: null
-		})
-
-	const samePassword : boolean = await bcrypt.compare(password, user.password);
-	if(!samePassword)
-		return res.status(401).send({
-			success: false,
-			code: 401,
-			message: 'Contraseña incorrecta.',
-			content: null
-		})
-
-	user.password = undefined
-	const token: string = GenerateToken({user})
-
-	return res.status(200).send({
-		success: true,
-		code: 200,
-		message: '¡Bienvenido!',
-		content: {
-			user,
-			token
-		}
-	})
-}
-
-export const studentLogin = async (req: Request, res: Response, next: NextFunction) => {
-	const {email, password} = req.body
-
-	const user = await User.findOne({email})
-		.select("+password")
 		.populate({
 			path: 'student'
 		})
