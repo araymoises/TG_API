@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import Student from "../../models/Student"
+import User from "../../models/User"
 import nodemailer from "nodemailer";
 
 export const getStudents = async (req: Request | any, res: Response) => {
@@ -123,6 +124,9 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
 
   try {
     let fields = await Student.findOne({ _id: id, status: true })
+    .populate({
+      path: 'user'
+    })
 
     if (!fields)
       return res.status(404).send({
@@ -150,6 +154,11 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
         path: 'classroom'
       })
 
+
+    if (email) {
+      await User.updateOne({ _id: fields.user._id, status: true }, { email })
+    }
+
     return res.status(200).send({
       success: true,
       code: 200,
@@ -173,6 +182,9 @@ export const deleteStudent = async (req: Request | any, res: Response) => {
 
   try {
     let fields = await Student.findOne({ _id: id, status: true })
+    .populate({
+      path: 'user'
+    })
 
     if (!fields)
       return res.status(404).send({
@@ -182,9 +194,8 @@ export const deleteStudent = async (req: Request | any, res: Response) => {
         content: null
       })
 
-    fields.status = false
-
-    await Student.updateOne({ _id: id, status: true }, fields)
+    await User.deleteOne({ _id: fields.user._id })
+    await Student.deleteOne({ _id: id })
 
     return res.status(200).send({
       success: true,
@@ -208,9 +219,9 @@ const encode = (str) => {
   var hex, i;
 
   var result = "";
-  for (i=0; i<str.length; i++) {
-      hex = str.charCodeAt(i).toString(16);
-      result += ("0"+hex).slice(-2);
+  for (i = 0; i < str.length; i++) {
+    hex = str.charCodeAt(i).toString(16);
+    result += ("0" + hex).slice(-2);
   }
 
   return result
@@ -220,8 +231,8 @@ const decode = (str) => {
   var j;
   var hexes = str.match(/.{1,2}/g) || [];
   var back = "";
-  for(j = 0; j<hexes.length; j++) {
-      back += String.fromCharCode(parseInt(hexes[j], 16));
+  for (j = 0; j < hexes.length; j++) {
+    back += String.fromCharCode(parseInt(hexes[j], 16));
   }
 
   return back;

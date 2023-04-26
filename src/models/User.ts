@@ -58,15 +58,6 @@ const userSchema = new mongoose.Schema({
   status: { type: Boolean, required: true, default: true, select: false },
   created: { type: Date, default: Date.now },
   modified: { type: Date, default: Date.now },
-  // progressStatus: {type: progressStatusSchema, required: false, default: {}},
-  // projectedStartDate: {type: Date},
-  // projectedFinishDate: {type: Date},
-  // resources: [{type: mongoose.Types.ObjectId, ref: 'Resource', required: false}],
-  // ownResource: {type: ownResource},
-  // duaRecommendedActivities: [{type: mongoose.Types.ObjectId, ref: 'DuaRecommendedActivity', required: false}],
-  // status: {type: String},
-  // created: {type: Date, default: Date.now},
-  // modified: {type: Date, default: Date.now},
 }, { toJSON: { virtuals: true } })
 
 userSchema.virtual('teacher',

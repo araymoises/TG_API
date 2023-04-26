@@ -21,12 +21,12 @@ classroomSchema.virtual('students',
   }
 )
 
-classroomSchema.virtual('content',
+classroomSchema.virtual('contents',
   {
     ref: "Content",
     localField: "_id",
     foreignField: "classroom",
-    justOne: true
+    justOne: false
   }
 )
 

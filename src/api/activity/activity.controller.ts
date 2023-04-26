@@ -8,7 +8,7 @@ export const getActivities = async (req: Request | any, res: Response) => {
   try {
     const classroomModel = await Classroom.find({ _id: classroom, status: true })
       .populate({
-        path: 'content',
+        path: 'contents',
         match: { status: true },
         populate: {
           path: 'activities',
@@ -27,15 +27,23 @@ export const getActivities = async (req: Request | any, res: Response) => {
         }
       })
 
-    if (!classroomModel.length)
+    if (!classroomModel.length || !classroomModel[0].contents.length)
       return res.status(404).send({
         success: false,
         code: 404,
         message: 'Actividades no encontradas.',
-        content: classroomModel
+        content: null
       })
 
-    const models = classroomModel[0].content.activities
+    const models = classroomModel[0].contents.map((content: any) => {
+      if (content.activities){
+        const _activities = JSON.parse(JSON.stringify(content.activities))
+        console.log('_activities');
+        console.log(_activities);
+
+        return {..._activities}
+      }
+    })
 
     if (!models.length)
       return res.status(404).send({
