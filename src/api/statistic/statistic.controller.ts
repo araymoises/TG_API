@@ -8,13 +8,14 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
     const classroomModel: any = await Classroom.findOne({ _id: classroom, status: true })
       .populate([
         {
-          path: 'content',
+          path: 'contents',
           match: { status: true },
           populate: {
             path: 'activities',
             match: { status: true },
-            populate : [{
-              path: 'qualifications'
+            populate: [{
+              path: 'qualifications',
+              match: { status: true }
             }]
           }
         },
@@ -44,7 +45,7 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
 
     const studentsQuantity = model.students.length
 
-    if (!model.content)
+    if (!model.contents.length)
       return res.status(404).send({
         success: false,
         code: 404,
@@ -52,38 +53,33 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
         content: null
       })
 
-    if (!model.content.activities.length)
-      return res.status(404).send({
-        success: false,
-        code: 404,
-        message: 'Actividades no encontradas.',
-        content: null
-      })
-
     let finishedActivitiesQuantity: Number = 0;
     let unfinishedActivitiesQuantity: Number = 0;
 
-    const activitiesStatus = model.content.activities.map((activity: any) => {
-      const qualificationsQuantity = activity.qualifications.length
-      let isActivityFinished;
-      if (qualificationsQuantity >= studentsQuantity) {
-        isActivityFinished = true
-        finishedActivitiesQuantity =+ 1
-      } else {
-        isActivityFinished = false
-        unfinishedActivitiesQuantity =+1
-      }
+    let activitiesStatus: Array<any> = []
+    model.contents.map((content: any) => {
+      content.activities.map((activity: any) => {
+        const qualificationsQuantity = activity.qualifications.length
+        let isActivityFinished;
+        if (qualificationsQuantity >= studentsQuantity) {
+          isActivityFinished = true
+          finishedActivitiesQuantity = Number(finishedActivitiesQuantity) + 1
+        } else {
+          isActivityFinished = false
+          unfinishedActivitiesQuantity = Number(unfinishedActivitiesQuantity) + 1
+        }
 
-      return {
-        id: activity._id,
-        name: activity.name,
-        isFinished: isActivityFinished
-      }
+        activitiesStatus.push({
+          id: activity._id,
+          name: activity.name,
+          isFinished: isActivityFinished
+        })
+      })
     })
 
-    return res.status(201).send({
+    return res.status(200).send({
       success: true,
-      code: 201,
+      code: 200,
       message: '¡Estado de las actividades obtenido exitosamente!',
       content: {
         finishedActivitiesQuantity,
@@ -140,7 +136,7 @@ export const getBestQualificationsAverage = async (req: Request | any, res: Resp
     const studentsQualificationAverage = model.students.map((student: any) => {
       let studentQualificationAverage: Number = 0
       student.qualifications.map((studentQualification: any) => {
-        studentQualificationAverage =+ studentQualification.qualification
+        studentQualificationAverage = + studentQualification.qualification
       })
       studentQualificationAverage = Number(studentQualificationAverage) / Number(student.qualifications.length)
 
@@ -181,7 +177,7 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
           populate: {
             path: 'activities',
             match: { status: true },
-            populate : [{
+            populate: [{
               path: 'qualifications'
             }]
           }
@@ -219,7 +215,7 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
 
       if (activity.qualifications.length) {
         activity.qualifications.map((qualificationActivity: any) => {
-          qualificationAverage =+ Number(qualificationActivity.qualification)
+          qualificationAverage = + Number(qualificationActivity.qualification)
         })
         qualificationAverage = Number(qualificationAverage) / Number(activity.qualifications.length)
       }

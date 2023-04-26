@@ -34,14 +34,12 @@ export const getActivities = async (req: Request | any, res: Response) => {
         message: 'Actividades no encontradas.',
         content: null
       })
-
-    const models = classroomModel[0].contents.map((content: any) => {
+    let models: Array<any> = []
+    classroomModel[0].contents.map((content: any) => {
       if (content.activities){
-        const _activities = JSON.parse(JSON.stringify(content.activities))
-        console.log('_activities');
-        console.log(_activities);
-
-        return {..._activities}
+        content.activities.map((activity: any) => {
+          models.push(activity)
+        })
       }
     })
 
