@@ -3,6 +3,7 @@ import { Router } from 'express'
 import authRouter from '../api/auth/auth.router'
 import classroomRouter from '../api/classroom/classroom.router'
 import studentRouter from '../api/student/student.router'
+import teacherRouter from '../api/teacher/teacher.router'
 import contentRouter from '../api/content/content.router'
 import qualificationtRouter from '../api/qualification/qualification.router'
 import objectRouter from '../api/object/object.router'
@@ -18,6 +19,7 @@ export default () => {
 	router.use('/auth', authRouter)
 	router.use('/classrooms', isAuth, studentsCantChangeDB, classroomRouter)
 	router.use('/students', isAuth, studentRouter)
+	router.use('/teachers', isAuth, teacherRouter)
 	router.use('/qualifications', isAuth, qualificationtRouter)
 	router.use('/contents', isAuth, studentsCantChangeDB, contentRouter)
 	router.use('/objects', isAuth, studentsCantChangeDB, objectRouter)

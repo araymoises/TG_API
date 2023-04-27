@@ -13,16 +13,21 @@ export const getActivities = async (req: Request | any, res: Response) => {
         populate: {
           path: 'activities',
           match: { status: true },
-          populate : [{
-            path: 'content'
+          populate: [{
+            path: 'content',
+            match: { status: true }
           }, {
-            path: 'activityType'
+            path: 'activityType',
+            match: { status: true }
           }, {
-            path: 'object'
+            path: 'object',
+            match: { status: true }
           }, {
-            path: 'answers'
+            path: 'answers',
+            match: { status: true }
           }, {
-            path: 'qualifications'
+            path: 'qualifications',
+            match: { status: true }
           }]
         }
       })
@@ -36,7 +41,7 @@ export const getActivities = async (req: Request | any, res: Response) => {
       })
     let models: Array<any> = []
     classroomModel[0].contents.map((content: any) => {
-      if (content.activities){
+      if (content.activities) {
         content.activities.map((activity: any) => {
           models.push(activity)
         })
@@ -75,16 +80,20 @@ export const getActivityById = async (req: Request | any, res: Response) => {
   try {
     const model = await Activity.findOne({ _id: id, status: true })
       .populate({
-        path: 'content'
+        path: 'content',
+        match: { status: true }
       })
       .populate({
-        path: 'activityType'
+        path: 'activityType',
+        match: { status: true }
       })
       .populate({
-        path: 'object'
+        path: 'object',
+        match: { status: true }
       })
       .populate({
-        path: 'answers'
+        path: 'answers',
+        match: { status: true }
       })
 
     if (!model)
@@ -141,7 +150,10 @@ export const saveActivity = async (req: Request | any, res: Response) => {
       model = await model.save()
 
       model = await Activity.populate(model, [
-        { path: 'content' }
+        {
+          path: 'content',
+          match: { status: true }
+        }
       ])
 
       return res.status(201).send({
@@ -217,7 +229,8 @@ export const updateActivityById = async (req: Request | any, res: Response) => {
 
     await Activity.updateOne({ _id: id, status: true }, fields)
       .populate({
-        path: 'content'
+        path: 'content',
+        match: { status: true }
       })
 
     return res.status(200).send({

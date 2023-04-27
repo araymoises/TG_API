@@ -9,7 +9,8 @@ export const getStudents = async (req: Request | any, res: Response) => {
   try {
     const models = await Student.find({ classroom, status: true })
       .populate({
-        path: 'classroom'
+        path: 'classroom',
+        match: { status: true }
       })
 
     if (!models.length)
@@ -44,7 +45,8 @@ export const getStudentById = async (req: Request | any, res: Response) => {
   try {
     const model = await Student.findOne({ _id: id, status: true })
       .populate({
-        path: 'classroom'
+        path: 'classroom',
+        match: { status: true }
       })
 
     if (!model)
@@ -73,51 +75,6 @@ export const getStudentById = async (req: Request | any, res: Response) => {
   }
 }
 
-export const saveStudent = async (req: Request | any, res: Response) => {
-  const { classroom, firstname, lastname, email } = req.body
-
-  try {
-    let model: any = new Student({
-      classroom,
-      firstname,
-      lastname,
-      email
-    })
-
-    try {
-      model = await model.save()
-
-      model = await Student.populate(model, [
-        { path: 'classroom' }
-      ])
-
-      return res.status(201).send({
-        success: true,
-        code: 201,
-        message: '¡Alumno creado exitosamente!',
-        content: model
-      })
-    } catch (err) {
-      console.log(err)
-      return res.status(500).send({
-        success: false,
-        code: 500,
-        message: 'No se pudo crear el alumno.',
-        content: null
-      })
-    }
-  } catch (err: any) {
-    console.log(err)
-    return res.status(500).send({
-      success: false,
-      code: 500,
-      message: 'No se pudo crear el alumno.',
-      error: err.message,
-      content: null
-    })
-  }
-}
-
 export const updateStudentById = async (req: Request | any, res: Response) => {
   const { classroom, firstname, lastname, email } = req.body
   const { id } = req.params
@@ -125,7 +82,8 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
   try {
     let fields = await Student.findOne({ _id: id, status: true })
     .populate({
-      path: 'user'
+      path: 'user',
+      match: { status: true }
     })
 
     if (!fields)
@@ -151,7 +109,8 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
 
     await Student.updateOne({ _id: id, status: true }, fields)
       .populate({
-        path: 'classroom'
+        path: 'classroom',
+        match: { status: true }
       })
 
 
@@ -183,7 +142,8 @@ export const deleteStudent = async (req: Request | any, res: Response) => {
   try {
     let fields = await Student.findOne({ _id: id, status: true })
     .populate({
-      path: 'user'
+      path: 'user',
+      match: { status: true }
     })
 
     if (!fields)

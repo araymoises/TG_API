@@ -7,7 +7,8 @@ export const getObjects = async (req: Request | any, res: Response) => {
   try {
     const models = await ThreeDObject.find({ status: true })
       .populate({
-        path: 'resources'
+        path: 'resources',
+        match: { status: true }
       })
 
     if (!models.length)
@@ -42,7 +43,8 @@ export const getObjectById = async (req: Request | any, res: Response) => {
   try {
     const model = await ThreeDObject.findOne({ _id: id, status: true })
       .populate({
-        path: 'resources'
+        path: 'resources',
+        match: { status: true }
       })
 
     if (!model)
@@ -102,7 +104,8 @@ export const saveObject = async (req: Request | any, res: Response) => {
 
       const modelResult = await ThreeDObject.findOne({ _id: model._id, status: true })
       .populate({
-        path: 'resources'
+        path: 'resources',
+        match: { status: true }
       })
 
       return res.status(201).send({
@@ -168,7 +171,8 @@ export const updateObjectById = async (req: Request | any, res: Response) => {
 
     await ThreeDObject.updateOne({ _id: id, status: true }, fields)
       .populate({
-        path: 'resources'
+        path: 'resources',
+        match: { status: true }
       })
 
     return res.status(200).send({

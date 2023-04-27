@@ -181,7 +181,8 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
             path: 'activities',
             match: { status: true },
             populate: [{
-              path: 'qualifications'
+              path: 'qualifications',
+              match: { status: true }
             }]
           }
         }

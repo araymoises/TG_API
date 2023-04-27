@@ -7,9 +7,11 @@ export const getQualificationsByActivity = async (req: Request | any, res: Respo
   try {
     const models = await Qualification.find({ activity, status: true })
       .populate([{
-        path: 'activity'
+        path: 'activity',
+        match: { status: true }
       }, {
-        path: 'student'
+        path: 'student',
+        match: { status: true }
       }])
 
     if (!models.length)
@@ -44,9 +46,11 @@ export const getQualificationsByStudent = async (req: Request | any, res: Respon
   try {
     const models = await Qualification.find({ student, status: true })
       .populate([{
-        path: 'activity'
+        path: 'activity',
+        match: { status: true }
       }, {
-        path: 'student'
+        path: 'student',
+        match: { status: true }
       }])
 
     if (!models.length)
@@ -81,9 +85,11 @@ export const getQualificationById = async (req: Request | any, res: Response) =>
   try {
     const model = await Qualification.findOne({ _id: id, status: true })
       .populate([{
-        path: 'activity'
+        path: 'activity',
+        match: { status: true }
       }, {
-        path: 'student'
+        path: 'student',
+        match: { status: true }
       }])
 
     if (!model)
@@ -126,9 +132,11 @@ export const saveQualification = async (req: Request | any, res: Response) => {
       model = await model.save()
 
       model = await Qualification.populate(model, [{
-        path: 'activity'
+        path: 'activity',
+        match: { status: true }
       }, {
-        path: 'student'
+        path: 'student',
+        match: { status: true }
       }])
 
       return res.status(201).send({
@@ -186,9 +194,11 @@ export const updateQualificationById = async (req: Request | any, res: Response)
 
     await Qualification.updateOne({ _id: id, status: true }, fields)
       .populate([{
-        path: 'activity'
+        path: 'activity',
+        match: { status: true }
       }, {
-        path: 'student'
+        path: 'student',
+        match: { status: true }
       }])
 
     return res.status(200).send({

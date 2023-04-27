@@ -7,7 +7,8 @@ export const getContents = async (req: Request | any, res: Response) => {
   try {
     const models = await Content.find({ classroom, status: true })
       .populate({
-        path: 'classroom'
+        path: 'classroom',
+        match: { status: true }
       })
 
     if (!models.length)
@@ -85,7 +86,10 @@ export const saveContent = async (req: Request | any, res: Response) => {
       model = await model.save()
 
       model = await Content.populate(model, [
-        { path: 'classroom' }
+        {
+          path: 'classroom',
+          match: { status: true }
+        }
       ])
 
       return res.status(201).send({
@@ -142,7 +146,8 @@ export const updateContentById = async (req: Request | any, res: Response) => {
 
     await Content.updateOne({ _id: id, status: true }, fields)
       .populate({
-        path: 'classroom'
+        path: 'classroom',
+        match: { status: true }
       })
 
     return res.status(200).send({

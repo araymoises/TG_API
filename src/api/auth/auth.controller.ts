@@ -12,10 +12,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 	const user = await User.findOne({email})
 		.select("+password")
 		.populate({
-			path: 'teacher'
+			path: 'teacher',
+      match: { status: true }
 		})
 		.populate({
-			path: 'student'
+			path: 'student',
+      match: { status: true }
 		})
 
 	if(!user)
@@ -73,7 +75,10 @@ export const teacherSignup = async (req: Request, res: Response, next: NextFunct
 		teacher = await teacher.save()
 
 		user = await User.populate(user, [
-			{ path: 'teacher' },
+			{
+        path: 'teacher',
+        match: { status: true }
+      },
 		])
 
 		return res.status(201).send({
@@ -128,7 +133,10 @@ export const studentSignup = async (req: Request, res: Response, next: NextFunct
 		student = await student.save()
 
 		user = await User.populate(user, [
-			{ path: 'student' },
+			{
+        path: 'student',
+        match: { status: true }
+      },
 		])
 
 		return res.status(201).send({

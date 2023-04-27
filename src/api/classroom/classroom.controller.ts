@@ -84,10 +84,12 @@ export const getClassroomById = async (req: Request | any, res: Response) => {
   try {
     const model = await Classroom.findOne({ _id: id, status: true })
       .populate({
-        path: 'teacher'
+        path: 'teacher',
+        match: { status: true }
       })
       .populate({
-        path: 'students'
+        path: 'students',
+        match: { status: true }
       })
 
 
@@ -136,7 +138,10 @@ export const saveClassroom = async (req: Request | any, res: Response) => {
       model = await model.save()
 
       model = await Classroom.populate(model, [
-        { path: 'teacher' }
+        {
+          path: 'teacher',
+          match: { status: true }
+        }
       ])
 
       return res.status(201).send({
@@ -191,7 +196,8 @@ export const updateClassroomById = async (req: Request | any, res: Response) => 
 
     await Classroom.updateOne({ _id: id, status: true }, fields)
       .populate({
-        path: 'teacher'
+        path: 'teacher',
+        match: { status: true }
       })
 
     return res.status(200).send({
