@@ -72,10 +72,13 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
         activitiesStatus.push({
           id: activity._id,
           name: activity.name,
+          created: activity.created,
           isFinished: isActivityFinished
         })
       })
     })
+
+    activitiesStatus = activitiesStatus.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
 
     return res.status(200).send({
       success: true,
@@ -145,7 +148,7 @@ export const getBestQualificationsAverage = async (req: Request | any, res: Resp
         name: `${student.firstname} ${student.lastname}`,
         studentQualificationAverage
       }
-    })
+    }).sort((a, b) => b.studentQualificationAverage - a.studentQualificationAverage);
 
     return res.status(201).send({
       success: true,
@@ -172,7 +175,7 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
     const classroomModel: any = await Classroom.findOne({ _id: classroom, status: true })
       .populate([
         {
-          path: 'content',
+          path: 'contents',
           match: { status: true },
           populate: {
             path: 'activities',
@@ -194,7 +197,7 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
 
     const model = JSON.parse(JSON.stringify(classroomModel))
 
-    if (!model.content)
+    if (!model.contents.length)
       return res.status(404).send({
         success: false,
         code: 404,
@@ -202,30 +205,45 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
         content: null
       })
 
-    if (!model.content.activities.length)
-      return res.status(404).send({
-        success: false,
-        code: 404,
-        message: 'Actividades no encontradas.',
-        content: null
+    let activitiesQualificationAverage: Array<any> = []
+    model.contents.map((content: any) => {
+      content.activities.map((activity: any) => {
+        let qualificationAverage: Number = 0
+
+        if (activity.qualifications.length) {
+          activity.qualifications.map((qualificationActivity: any) => {
+            qualificationAverage = Number(qualificationAverage) + Number(qualificationActivity.qualification)
+            console.log('qualificationActivity.qualification');
+            console.log(qualificationActivity.qualification);
+
+          })
+          qualificationAverage = Number(qualificationAverage) / Number(activity.qualifications.length)
+
+          console.log('qualificationAverage');
+          console.log(qualificationAverage);
+          console.log('Number(qualificationAverage)');
+          console.log(Number(qualificationAverage));
+          console.log('Number(activity.qualifications.length)');
+          console.log(Number(activity.qualifications.length));
+
+        }
+
+        console.log('result');
+        console.log({
+          id: activity._id,
+          name: activity.name,
+          qualificationAverage
+        });
+
+        activitiesQualificationAverage.push({
+            id: activity._id,
+            name: activity.name,
+            qualificationAverage
+          })
       })
-
-    const activitiesQualificationAverage = model.content.activities.map((activity: any) => {
-      let qualificationAverage: Number = 0
-
-      if (activity.qualifications.length) {
-        activity.qualifications.map((qualificationActivity: any) => {
-          qualificationAverage = + Number(qualificationActivity.qualification)
-        })
-        qualificationAverage = Number(qualificationAverage) / Number(activity.qualifications.length)
-      }
-
-      return {
-        id: activity._id,
-        name: activity.name,
-        qualificationAverage
-      }
     })
+
+    activitiesQualificationAverage = activitiesQualificationAverage.sort((a, b) => b.qualificationAverage - a.qualificationAverage);
 
     return res.status(201).send({
       success: true,
