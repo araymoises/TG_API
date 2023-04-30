@@ -21,7 +21,11 @@ export const getActivities = async (req: Request | any, res: Response) => {
             match: { status: true }
           }, {
             path: 'object',
-            match: { status: true }
+            match: { status: true },
+            populate: [{
+              path: 'resources',
+              match: { status: true }
+            }]
           }, {
             path: 'answers',
             match: { status: true }
@@ -43,7 +47,13 @@ export const getActivities = async (req: Request | any, res: Response) => {
     classroomModel[0].contents.map((content: any) => {
       if (content.activities) {
         content.activities.map((activity: any) => {
-          models.push(activity)
+          let resultActivity: any = JSON.parse(JSON.stringify(activity))
+          resultActivity.object.scale = JSON.parse(resultActivity.object.scale)
+          resultActivity.object.position = JSON.parse(resultActivity.object.position)
+          resultActivity.object.rotationPivot = JSON.parse(resultActivity.object.rotationPivot)
+          resultActivity.object.resources = resultActivity.object.resources.map((resource: any) => resource.path)
+
+          models.push(resultActivity)
         })
       }
     })
@@ -89,10 +99,18 @@ export const getActivityById = async (req: Request | any, res: Response) => {
       })
       .populate({
         path: 'object',
-        match: { status: true }
+        match: { status: true },
+        populate: [{
+          path: 'resources',
+          match: { status: true }
+        }]
       })
       .populate({
         path: 'answers',
+        match: { status: true }
+      })
+      .populate({
+        path: 'qualifications',
         match: { status: true }
       })
 
@@ -104,11 +122,17 @@ export const getActivityById = async (req: Request | any, res: Response) => {
         content: null
       })
 
+    let resultActivity: any = JSON.parse(JSON.stringify(model))
+    resultActivity.object.scale = JSON.parse(resultActivity.object.scale)
+    resultActivity.object.position = JSON.parse(resultActivity.object.position)
+    resultActivity.object.rotationPivot = JSON.parse(resultActivity.object.rotationPivot)
+    resultActivity.object.resources = resultActivity.object.resources.map((resource: any) => resource.path)
+
     return res.status(201).send({
       success: true,
       code: 201,
       message: 'Actividad encontrada!',
-      content: model
+      content: resultActivity
     })
   } catch (err: any) {
     console.log(err)

@@ -74,11 +74,12 @@ export const getObjectById = async (req: Request | any, res: Response) => {
 }
 
 export const saveObject = async (req: Request | any, res: Response) => {
-  const { name, sourcePath, type, scale, position, rotationPivot, resources } = req.body
+  const { name, code, sourcePath, type, scale, position, rotationPivot, resources } = req.body
 
   try {
     let model: any = new ThreeDObject({
       name,
+      code,
       sourcePath,
       type,
       scale,
@@ -103,10 +104,10 @@ export const saveObject = async (req: Request | any, res: Response) => {
       })
 
       const modelResult = await ThreeDObject.findOne({ _id: model._id, status: true })
-      .populate({
-        path: 'resources',
-        match: { status: true }
-      })
+        .populate({
+          path: 'resources',
+          match: { status: true }
+        })
 
       return res.status(201).send({
         success: true,
@@ -136,7 +137,7 @@ export const saveObject = async (req: Request | any, res: Response) => {
 }
 
 export const updateObjectById = async (req: Request | any, res: Response) => {
-  const { name, sourcePath, type, scale, position, rotationPivot } = req.body
+  const { name, code, sourcePath, type, scale, position, rotationPivot } = req.body
   const { id } = req.params
 
   try {
@@ -152,6 +153,9 @@ export const updateObjectById = async (req: Request | any, res: Response) => {
 
     if (name) {
       fields.name = name
+    }
+    if (code) {
+      fields.code = code
     }
     if (sourcePath) {
       fields.sourcePath = sourcePath

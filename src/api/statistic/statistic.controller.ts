@@ -85,8 +85,22 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
       code: 200,
       message: '¡Estado de las actividades obtenido exitosamente!',
       content: {
-        finishedActivitiesQuantity,
-        unfinishedActivitiesQuantity,
+        statuses: [
+          {
+            name: "Por finalizar",
+            population: unfinishedActivitiesQuantity,
+            color: "#c2c2c2",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15
+          },
+          {
+            name: "Finalizadas",
+            population: finishedActivitiesQuantity,
+            color: "#3ec76b",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15
+          },
+        ],
         activitiesStatus
       },
     })
@@ -137,12 +151,13 @@ export const getBestQualificationsAverage = async (req: Request | any, res: Resp
       })
 
     const studentsQualificationAverage = model.students.map((student: any) => {
-      let studentQualificationAverage: Number = 0
+      let studentQualificationAverage: any = 0
       student.qualifications.map((studentQualification: any) => {
-        studentQualificationAverage = + studentQualification.qualification
+        studentQualificationAverage = Number(studentQualificationAverage) + Number(studentQualification.qualification)
       })
       studentQualificationAverage = Number(studentQualificationAverage) / Number(student.qualifications.length)
 
+      studentQualificationAverage = Number(studentQualificationAverage).toFixed(0)
       return {
         id: student._id,
         name: `${student.firstname} ${student.lastname}`,
@@ -150,11 +165,30 @@ export const getBestQualificationsAverage = async (req: Request | any, res: Resp
       }
     }).sort((a, b) => b.studentQualificationAverage - a.studentQualificationAverage);
 
+    let chart: any = {
+      labels: [],
+      datasets: [
+        {
+          data: []
+        }
+      ]
+    }
+
+    studentsQualificationAverage.map((sqa: any, index) => {
+      if (index <= 4) {
+        chart.labels.push(sqa.name)
+        chart.datasets[0].data.push(Number(sqa.studentQualificationAverage))
+      }
+    })
+
     return res.status(201).send({
       success: true,
       code: 201,
       message: '¡Mejores promedios de estudiantes obtenidos exitosamente!',
-      content: studentsQualificationAverage
+      content: {
+        studentsQualificationAverage,
+        chart
+      }
     })
   } catch (err: any) {
     console.log(err)
@@ -209,7 +243,7 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
     let activitiesQualificationAverage: Array<any> = []
     model.contents.map((content: any) => {
       content.activities.map((activity: any) => {
-        let qualificationAverage: Number = 0
+        let qualificationAverage: any = 0
 
         if (activity.qualifications.length) {
           activity.qualifications.map((qualificationActivity: any) => {
@@ -229,28 +263,43 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
 
         }
 
-        console.log('result');
-        console.log({
+        qualificationAverage = Number(qualificationAverage).toFixed(0)
+
+
+        activitiesQualificationAverage.push({
           id: activity._id,
           name: activity.name,
           qualificationAverage
-        });
-
-        activitiesQualificationAverage.push({
-            id: activity._id,
-            name: activity.name,
-            qualificationAverage
-          })
+        })
       })
     })
 
-    activitiesQualificationAverage = activitiesQualificationAverage.sort((a, b) => b.qualificationAverage - a.qualificationAverage);
+    activitiesQualificationAverage = activitiesQualificationAverage.sort((a, b) => b.id - a.id);
 
+
+    let chart: any = {
+      labels: [],
+      datasets: [
+        {
+          data: []
+        }
+      ]
+    }
+
+    activitiesQualificationAverage.map((aqv: any, index) => {
+      if (index <= 4) {
+        chart.labels.push(aqv.name)
+        chart.datasets[0].data.push(Number(aqv.qualificationAverage))
+      }
+    })
     return res.status(201).send({
       success: true,
       code: 201,
       message: '¡Promedio de las actividades obtenidos exitosamente!',
-      content: activitiesQualificationAverage
+      content: {
+        activitiesQualificationAverage,
+        chart
+      }
     })
   } catch (err: any) {
     console.log(err)
