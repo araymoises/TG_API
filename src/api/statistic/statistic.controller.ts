@@ -248,19 +248,8 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
         if (activity.qualifications.length) {
           activity.qualifications.map((qualificationActivity: any) => {
             qualificationAverage = Number(qualificationAverage) + Number(qualificationActivity.qualification)
-            console.log('qualificationActivity.qualification');
-            console.log(qualificationActivity.qualification);
-
           })
           qualificationAverage = Number(qualificationAverage) / Number(activity.qualifications.length)
-
-          console.log('qualificationAverage');
-          console.log(qualificationAverage);
-          console.log('Number(qualificationAverage)');
-          console.log(Number(qualificationAverage));
-          console.log('Number(activity.qualifications.length)');
-          console.log(Number(activity.qualifications.length));
-
         }
 
         qualificationAverage = Number(qualificationAverage).toFixed(0)
