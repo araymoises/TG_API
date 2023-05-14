@@ -81,10 +81,10 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
 
   try {
     let fields = await Student.findOne({ _id: id, status: true })
-    .populate({
-      path: 'user',
-      match: { status: true }
-    })
+      .populate({
+        path: 'user',
+        match: { status: true }
+      })
 
     if (!fields)
       return res.status(404).send({
@@ -141,10 +141,10 @@ export const deleteStudent = async (req: Request | any, res: Response) => {
 
   try {
     let fields = await Student.findOne({ _id: id, status: true })
-    .populate({
-      path: 'user',
-      match: { status: true }
-    })
+      .populate({
+        path: 'user',
+        match: { status: true }
+      })
 
     if (!fields)
       return res.status(404).send({
@@ -201,7 +201,8 @@ const decode = (str) => {
 export const inviteStudent = async (req: Request | any, res: Response) => {
   const { email, classroom } = req.body
 
-  const host = 'http://arclassroom.app/'
+  const hostOld = 'app://arclassroom.app/'
+  const host = 'http://localhost:3000/invitation/'
   const timeInt = new Date().valueOf();
 
   try {
@@ -232,7 +233,8 @@ export const inviteStudent = async (req: Request | any, res: Response) => {
     };
 
     mailer.sendMail(mailOptions, function (err: any, info: any) {
-      if (err || info.rejected) {
+      if (err || info.rejected.length) {
+        console.log('err');
         console.log(err);
         return res.status(500).send({
           success: false,
@@ -247,7 +249,9 @@ export const inviteStudent = async (req: Request | any, res: Response) => {
         success: true,
         code: 200,
         message: 'Alumno invitado correctamente!',
-        content: 'null'
+        content: {
+          invitationLink
+        }
       })
     });
   } catch (err: any) {

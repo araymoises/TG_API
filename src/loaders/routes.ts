@@ -13,20 +13,19 @@ import answerRouter from '../api/answer/answer.router'
 import statisticRouter from '../api/statistic/statistic.router'
 import isAuth from '../middlewares/isAuth'
 import studentsCantChangeDB from '../middlewares/studentsCantChangeDB'
-
 export default () => {
-	const router = Router()
-	router.use('/auth', authRouter)
-	router.use('/classrooms', isAuth, studentsCantChangeDB, classroomRouter)
-	router.use('/students', isAuth, studentRouter)
-	router.use('/teachers', isAuth, teacherRouter)
-	router.use('/qualifications', isAuth, qualificationtRouter)
-	router.use('/contents', isAuth, studentsCantChangeDB, contentRouter)
-	router.use('/objects', isAuth, studentsCantChangeDB, objectRouter)
-	router.use('/activities', isAuth, studentsCantChangeDB, activityRouter)
-	router.use('/activity-types', isAuth, studentsCantChangeDB, activityTypeRouter)
-	router.use('/answers', isAuth, studentsCantChangeDB, answerRouter)
-	router.use('/statistics', isAuth, statisticRouter)
+  const router = Router()
+  router.use('/auth', authRouter)
+  router.use('/classrooms', isAuth, studentsCantChangeDB, classroomRouter)
+  router.use('/students', isAuth, studentRouter)
+  router.use('/teachers', isAuth, teacherRouter)
+  router.use('/qualifications', isAuth, qualificationtRouter)
+  router.use('/contents', isAuth, studentsCantChangeDB, contentRouter)
+  router.use('/objects', isAuth, studentsCantChangeDB, objectRouter)
+  router.use('/activities', isAuth, studentsCantChangeDB, activityRouter)
+  router.use('/activity-types', isAuth, studentsCantChangeDB, activityTypeRouter)
+  router.use('/answers', isAuth, studentsCantChangeDB, answerRouter)
+  router.use('/statistics', isAuth, statisticRouter)
 
   return router
 };
