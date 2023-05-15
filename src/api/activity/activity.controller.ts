@@ -37,9 +37,9 @@ export const getActivities = async (req: Request | any, res: Response) => {
       })
 
     if (!classroomModel.length || !classroomModel[0].contents.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Actividades no encontradas.',
         content: null
       })
@@ -59,9 +59,9 @@ export const getActivities = async (req: Request | any, res: Response) => {
     })
 
     if (!models.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Actividades no encontradas.',
         content: models
       })

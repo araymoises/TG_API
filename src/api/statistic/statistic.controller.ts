@@ -26,9 +26,9 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
       ])
 
     if (!classroomModel)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Aula no encontrada.',
         content: null
       })
@@ -36,9 +36,9 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
     const model = JSON.parse(JSON.stringify(classroomModel))
 
     if (!model.students.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Alumnos no encontrados.',
         content: null
       })
@@ -46,9 +46,9 @@ export const getActivitiesStatus = async (req: Request | any, res: Response) => 
     const studentsQuantity = model.students.length
 
     if (!model.contents.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Cotenido no encontrado.',
         content: null
       })
@@ -133,9 +133,9 @@ export const getBestQualificationsAverage = async (req: Request | any, res: Resp
       ])
 
     if (!classroomModel)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Aula no encontrada.',
         content: null
       })
@@ -143,9 +143,9 @@ export const getBestQualificationsAverage = async (req: Request | any, res: Resp
     const model = JSON.parse(JSON.stringify(classroomModel))
 
     if (!model.students.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Alumnos no encontrados.',
         content: null
       })
@@ -223,9 +223,9 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
       ])
 
     if (!classroomModel)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Aula no encontrada.',
         content: null
       })
@@ -233,9 +233,9 @@ export const getQualificationAverageByActivity = async (req: Request | any, res:
     const model = JSON.parse(JSON.stringify(classroomModel))
 
     if (!model.contents.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Cotenido no encontrado.',
         content: null
       })

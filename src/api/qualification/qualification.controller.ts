@@ -54,9 +54,9 @@ export const getQualificationsByStudent = async (req: Request | any, res: Respon
       }])
 
     if (!models.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Calificaciones no encontradas.',
         content: null
       })

@@ -12,9 +12,9 @@ export const getContents = async (req: Request | any, res: Response) => {
       })
 
     if (!models.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Contenidos no encontrados.',
         content: null
       })

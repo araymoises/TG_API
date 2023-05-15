@@ -8,19 +8,33 @@ export const getClassrooms = async (req: Request | any, res: Response) => {
     let result;
     if (req.isTeacher) {
       models = await Classroom.find({ teacher: req.teacherId, status: true })
-        .populate({
-          path: 'teacher',
-          match: { status: true }
-        })
-        .populate({
-          path: 'students',
-          match: { status: true }
-        })
+        .populate([
+          {
+            path: 'teacher',
+            match: { status: true }
+          },
+          {
+            path: 'students',
+            match: { status: true }
+          },
+          {
+            path: 'contents',
+            match: { status: true },
+            populate: {
+              path: 'activities',
+              match: { status: true },
+              populate: [{
+                path: 'qualifications',
+                match: { status: true }
+              }]
+            }
+          },
+        ])
 
       if (!models.length)
-        return res.status(404).send({
+        return res.status(200).send({
           success: false,
-          code: 404,
+          code: 200,
           message: 'Aulas no encontradas.',
           content: null
         })
@@ -44,14 +58,27 @@ export const getClassrooms = async (req: Request | any, res: Response) => {
           {
             path: 'students',
             match: { status: true }
-          }]
+          },
+          {
+            path: 'contents',
+            match: { status: true },
+            populate: {
+              path: 'activities',
+              match: { status: true },
+              populate: [{
+                path: 'qualifications',
+                match: { status: true }
+              }]
+            }
+          },
+          ]
         })
 
       models = JSON.parse(JSON.stringify(models))
       if (!models.classroom)
-        return res.status(404).send({
+        return res.status(200).send({
           success: false,
-          code: 404,
+          code: 200,
           message: 'Aulas no encontradas.',
           content: null
         })
@@ -60,11 +87,51 @@ export const getClassrooms = async (req: Request | any, res: Response) => {
       result = [models.classroom]
     }
 
+
+    const ress = result.map((classroom) => {
+      const studentsQuantity = classroom.studentsQuantity
+      let finishedActivitiesQuantity: any = 0
+      let activitiesProgress: any = 0
+      let activitiesQuantity: any = 0
+      classroom.contents.map((content: any) => {
+        content.activities.map((activity: any) => {
+          const qualificationsQuantity = activity.qualifications.length
+          let isActivityFinished;
+          if (qualificationsQuantity >= studentsQuantity) {
+            isActivityFinished = true
+          } else {
+            isActivityFinished = false
+          }
+
+          /*activitiesStatus.push({
+            id: activity._id,
+            name: activity.name,
+            created: activity.created,
+            isFinished: isActivityFinished
+          })*/
+
+          finishedActivitiesQuantity = Number(finishedActivitiesQuantity) + 1
+          activitiesQuantity = Number(activitiesQuantity) + 1
+        })
+      })
+
+      if (activitiesQuantity) {
+        activitiesProgress = (Number(finishedActivitiesQuantity) / Number(activitiesQuantity)) * 100
+      } else {
+        activitiesProgress = 100
+      }
+
+      return {
+        ...classroom,
+        activitiesProgress
+      }
+    })
+
     return res.status(201).send({
       success: true,
       code: 201,
       message: '¡Aulas encontradas!',
-      content: result
+      content: ress
     })
   } catch (err: any) {
     console.log(err)

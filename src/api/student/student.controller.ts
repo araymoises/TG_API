@@ -14,9 +14,9 @@ export const getStudents = async (req: Request | any, res: Response) => {
       })
 
     if (!models.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Alumnos no encontrados.',
         content: null
       })
@@ -47,6 +47,14 @@ export const getStudentById = async (req: Request | any, res: Response) => {
       .populate({
         path: 'classroom',
         match: { status: true }
+      })
+      .populate({
+        path: 'qualifications',
+        match: { status: true },
+        populate: {
+          path: 'activity',
+          match: { status: true }
+        }
       })
 
     if (!model)
@@ -169,6 +177,46 @@ export const deleteStudent = async (req: Request | any, res: Response) => {
       success: false,
       code: 500,
       message: 'Alumno no pudo ser eliminado.',
+      error: err.message,
+      content: null
+    })
+  }
+}
+
+export const unlinkStudent = async (req: Request | any, res: Response) => {
+  const { id } = req.params
+
+  try {
+    let fields = await Student.findOne({ _id: id, status: true })
+      .populate({
+        path: 'user',
+        match: { status: true }
+      })
+
+    if (!fields)
+      return res.status(404).send({
+        success: false,
+        code: 404,
+        message: 'Alumno no encontrado.',
+        content: null
+      })
+
+    fields.classroom = null
+
+    await Student.updateOne({ _id: id, status: true }, fields)
+
+    return res.status(200).send({
+      success: true,
+      code: 200,
+      message: 'Alumno desvinculado correctamente!',
+      content: fields
+    })
+  } catch (err: any) {
+    console.log(err)
+    return res.status(500).send({
+      success: false,
+      code: 500,
+      message: 'Alumno no pudo ser desvinculado.',
       error: err.message,
       content: null
     })

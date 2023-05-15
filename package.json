@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./build/server.js",
     "ts": "tsc -w",
+    "postinstall": "tsc",
     "dev": "nodemon ./build/server.js",
-    "build": "tsc",
-    "start": "node ./build/server.js"
+    "watch-node": "nodemon ./build/index.js",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
   "author": "Mastransporte",
   "license": "ISC",
@@ -49,5 +52,8 @@
     "handlebars": "^4.7.6",
     "nodemon": "^2.0.4",
     "typescript": "^4.0.2"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }

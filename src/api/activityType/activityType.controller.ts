@@ -8,9 +8,9 @@ export const getActivityTypes = async (req: Request | any, res: Response) => {
     const models = await ActivityType.find({ status: true })
 
     if (!models.length)
-      return res.status(404).send({
+      return res.status(200).send({
         success: false,
-        code: 404,
+        code: 200,
         message: 'Tipos de actividades no encontrados.',
         content: null
       })
