@@ -11,7 +11,7 @@ const activitySchema = new mongoose.Schema({
   activityType: { type: mongoose.Types.ObjectId, ref: 'ActivityType', required: true },
   object: { type: mongoose.Types.ObjectId, ref: 'Object', required: true },
   name: { type: String, required: true },
-  description: { type: String, required: true },
+  description: { type: String, required: false },
   question: { type: String, required: true },
   max_qualification: { type: Number, required: true },
   startDate: { type: Date, required: true },

@@ -250,7 +250,7 @@ export const inviteStudent = async (req: Request | any, res: Response) => {
   const { email, classroom } = req.body
 
   const hostOld = 'app://arclassroom.app/'
-  const host = 'http://localhost:3000/invitation/'
+  const host = 'https://api-arclassroom-tesis.herokuapp.com/invitation/'
   const timeInt = new Date().valueOf();
 
   try {

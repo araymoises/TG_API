@@ -64,8 +64,38 @@ class Server {
       </html>
       `);
     });
+    this.app.get('/recoverpassword/:encryptedData', (req, res) => {
+      res.set('Content-Type', 'text/html');
+      res.status(200).send(`
+      <!DOCTYPE html>
+      <html lang="en">
 
+      <head>
+        <meta charset="UTF-8">
+        <title>Sample Site</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            body {
+              padding-top: 50px;
+            }
+        </style>
+      </head>
+
+      <body>
+        <div class="container">
+            <div class="jumbotron">
+              <h1>Recuperación de contraseña en AR Classroom</h1>
+              <p><a href="app://arclassroom.app/recoverPassword/${req.params?.encryptedData}">Recuperar contraseña</a></p>
+            </div>
+        </div>
+
+      </body>
+      </html>
+      `);
+    });
   }
+
   start() {
     this.app.listen(this.app.get('port'), () => {
       console.log('Server on port', this.app.get('port'))

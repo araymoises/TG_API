@@ -66,17 +66,16 @@ export const getAnswerById = async (req: Request | any, res: Response) => {
 }
 
 export const saveAnswer = async (req: Request | any, res: Response) => {
-  const { activity, title, isCorrect } = req.body
+  // const { activity, title, isCorrect } = req.body
 
   try {
-    let model: any = new Answer({
-      activity,
-      title,
-      isCorrect
-    })
+
 
     try {
-      model = await model.save()
+      const model = req.body.map(async (answer) => {
+        let _answer: any = new Answer(answer)
+        return await _answer.save()
+      })
 
       return res.status(201).send({
         success: true,
