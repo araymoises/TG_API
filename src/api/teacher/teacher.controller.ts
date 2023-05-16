@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import Teacher from "../../models/Teacher"
 import User from "../../models/User"
+import Encrypter from "../../services/encrypter.service"
 
 export const getTeacherById = async (req: Request | any, res: Response) => {
   const { id } = req.params
@@ -39,15 +40,16 @@ export const getTeacherById = async (req: Request | any, res: Response) => {
 }
 
 export const updateTeacherById = async (req: Request | any, res: Response) => {
-  const { classroom, firstname, phone, lastname, email } = req.body
+  const { classroom, firstname, phone, lastname, email, password } = req.body
   const { id } = req.params
 
   try {
+    let userFields
     let fields = await Teacher.findOne({ _id: id, status: true })
-    .populate({
-      path: 'user',
-      match: { status: true }
-    })
+      .populate({
+        path: 'user',
+        match: { status: true }
+      })
 
     if (!fields)
       return res.status(404).send({
@@ -71,6 +73,10 @@ export const updateTeacherById = async (req: Request | any, res: Response) => {
     }
     if (email) {
       fields.email = email
+      userFields.email = email
+    }
+    if (password) {
+      userFields.password = (await Encrypter(password)).toString()
     }
 
     await Teacher.updateOne({ _id: id, status: true }, fields)
@@ -80,8 +86,8 @@ export const updateTeacherById = async (req: Request | any, res: Response) => {
       })
 
 
-    if (email) {
-      await User.updateOne({ _id: fields.user._id, status: true }, { email })
+    if (email || password) {
+      await User.updateOne({ _id: fields.user._id, status: true }, userFields)
     }
 
     return res.status(200).send({
@@ -107,10 +113,10 @@ export const deleteTeacher = async (req: Request | any, res: Response) => {
 
   try {
     let fields = await Teacher.findOne({ _id: id, status: true })
-    .populate({
-      path: 'user',
-      match: { status: true }
-    })
+      .populate({
+        path: 'user',
+        match: { status: true }
+      })
 
     if (!fields)
       return res.status(404).send({

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import Student from "../../models/Student"
 import User from "../../models/User"
 import nodemailer from "nodemailer";
+import Encrypter from "../../services/encrypter.service"
 
 export const getStudents = async (req: Request | any, res: Response) => {
   const { classroom } = req.params
@@ -84,10 +85,11 @@ export const getStudentById = async (req: Request | any, res: Response) => {
 }
 
 export const updateStudentById = async (req: Request | any, res: Response) => {
-  const { classroom, firstname, lastname, email } = req.body
+  const { classroom, firstname, lastname, email, password } = req.body
   const { id } = req.params
 
   try {
+    let userFields
     let fields = await Student.findOne({ _id: id, status: true })
       .populate({
         path: 'user',
@@ -113,6 +115,10 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
     }
     if (email) {
       fields.email = email
+      userFields.email = email
+    }
+    if (password) {
+      userFields.password = (await Encrypter(password)).toString()
     }
 
     await Student.updateOne({ _id: id, status: true }, fields)
@@ -121,9 +127,8 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
         match: { status: true }
       })
 
-
-    if (email) {
-      await User.updateOne({ _id: fields.user._id, status: true }, { email })
+    if (email || password) {
+      await User.updateOne({ _id: fields.user._id, status: true }, userFields)
     }
 
     return res.status(200).send({
