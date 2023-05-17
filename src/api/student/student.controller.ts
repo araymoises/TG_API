@@ -89,7 +89,7 @@ export const updateStudentById = async (req: Request | any, res: Response) => {
   const { id } = req.params
 
   try {
-    let userFields
+    let userFields: any = {}
     let fields = await Student.findOne({ _id: id, status: true })
       .populate({
         path: 'user',
