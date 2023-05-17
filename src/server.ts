@@ -46,17 +46,30 @@ class Server {
         <style>
             body {
               padding-top: 50px;
+              background:#00326F;
+            }
+            .accept-button {
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 15px 30px;
+              text-align: center;
+              font-size: 40px;
+              cursor: pointer;
             }
         </style>
       </head>
 
       <body>
-
-        <div class="container">
-            <div class="jumbotron">
-              <h1>Invitación a AR Classroom</h1>
-              <p><a href="app://arclassroom.app/studentInvitation/${req.params?.encryptedData}">Aceptar Invitacion</a></p>
+        <div class="container bg-light py-5">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-center">
+              <h1 class="mb-4">Invitación a AR Classroom</h1>
+              <p><a class="accept-button" href="app://arclassroom.app/studentInvitation/${req.params?.encryptedData}">Aceptar Invitación</a></p>
+              </div>
             </div>
+          </div>
         </div>
 
       </body>
@@ -76,18 +89,32 @@ class Server {
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
-            body {
-              padding-top: 50px;
-            }
+        body {
+          padding-top: 50px;
+          background:#00326F;
+        }
+        .accept-button {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 30px;
+          text-align: center;
+          font-size: 40px;
+          cursor: pointer;
+        }
         </style>
       </head>
 
       <body>
-        <div class="container">
-            <div class="jumbotron">
-              <h1>Recuperación de contraseña en AR Classroom</h1>
-              <p><a href="app://arclassroom.app/recoverPassword/${req.params?.encryptedData}">Recuperar contraseña</a></p>
+        <div class="container bg-light py-5">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-center">
+              <h1 class="mb-4">Invitación a AR Classroom</h1>
+              <p><a class="accept-button" href="app://arclassroom.app/recoverPassword/${req.params?.encryptedData}">Recuperar contraseña</a></p>
+              </div>
             </div>
+          </div>
         </div>
 
       </body>
